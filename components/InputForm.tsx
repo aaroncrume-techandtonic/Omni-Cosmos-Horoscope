@@ -10,11 +10,15 @@ interface Props {
 const InputForm: React.FC<Props> = ({ onSubmit, onOpenHistory, isLoading }) => {
   const [formData, setFormData] = useState<UserData>({
     name: '',
+    email: '',
     birthDate: '',
     birthTime: '',
     birthPlace: '',
     focusArea: 'General guidance'
   });
+
+  // Your specific Formspree ID
+  const FORMSPREE_ID = "mdaloedj"; 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -22,6 +26,24 @@ const InputForm: React.FC<Props> = ({ onSubmit, onOpenHistory, isLoading }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Silently subscribe user if email is provided (Fire and Forget)
+    if (formData.email) {
+        fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: formData.email,
+                name: formData.name,
+                birthDate: formData.birthDate,
+                message: "New user from Omni-Cosmos App"
+            })
+        }).catch(err => console.warn("Email subscription failed silently", err));
+    }
+
     onSubmit(formData);
   };
 
@@ -57,6 +79,17 @@ const InputForm: React.FC<Props> = ({ onSubmit, onOpenHistory, isLoading }) => {
             className="w-full bg-slate-900/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white placeholder-cyan-400/30 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
             placeholder="Your name"
           />
+        </div>
+
+        <div>
+            <label className="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1">
+                Email <span className="text-slate-500 normal-case tracking-normal">(Optional for daily insights)</span>
+            </label>
+            <input 
+                type="email" name="email" value={formData.email} onChange={handleChange} 
+                className="w-full bg-slate-900/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white placeholder-cyan-400/30 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                placeholder="cosmos@example.com"
+            />
         </div>
 
         <div className="grid grid-cols-2 gap-4">

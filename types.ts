@@ -1,5 +1,6 @@
 export interface UserData {
   name: string;
+  email?: string; // Optional email field
   birthDate: string;
   birthTime: string;
   birthPlace: string;
