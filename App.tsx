@@ -4,6 +4,7 @@ import InputForm from './components/InputForm';
 import HoroscopeView from './components/HoroscopeView';
 import LiveOracle from './components/LiveOracle';
 import HistoryList from './components/HistoryList';
+import LoadingScreen from './components/LoadingScreen';
 import { UserData, HoroscopeReading, AppState, SavedReading } from './types';
 import { generateHoroscopeText, generateHoroscopeImage, generateTTS, formatTextForSpeech } from './services/geminiService';
 import { saveReadingToLocal, getReadingsFromLocal, deleteReadingFromLocal } from './services/storageService';
@@ -127,15 +128,7 @@ const App: React.FC = () => {
         )}
 
         {appState === AppState.GENERATING && (
-          <div className="text-center animate-pulse">
-            <div className="w-24 h-24 mx-auto mb-8 relative">
-               <div className="absolute inset-0 border-4 border-cyan-500/30 rounded-full"></div>
-               <div className="absolute inset-0 border-4 border-t-cyan-400 rounded-full animate-spin"></div>
-               <div className="absolute inset-4 bg-indigo-500/20 rounded-full blur-xl"></div>
-            </div>
-            <h2 className="text-2xl font-cinzel text-white mb-2">Harmonizing Cosmic Frequencies...</h2>
-            <p className="text-cyan-200">Synthesizing voice, vision, and wisdom.</p>
-          </div>
+          <LoadingScreen />
         )}
 
         {appState === AppState.READING && readingData && imageData && (
@@ -189,6 +182,9 @@ const App: React.FC = () => {
         }
         .animate-pulse-slow {
           animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .animate-spin-slow {
+          animation: spin 12s linear infinite;
         }
       `}</style>
     </div>

@@ -13,8 +13,9 @@ export const saveReadingToLocal = (reading: SavedReading): boolean => {
     
     if (isDuplicate) return true;
 
-    // Limit to last 10 items to prevent LocalStorage quota limits (images are heavy)
-    const updated = [reading, ...existing].slice(0, 10);
+    // Limit to last 5 items to prevent LocalStorage quota limits (images are heavy)
+    // Decreased from 10 to 5 to ensure stability.
+    const updated = [reading, ...existing].slice(0, 5);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     return true;
   } catch (e) {
